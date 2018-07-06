@@ -1,0 +1,42 @@
+server:
+  port: 8088
+
+spring:
+  profiles:
+    active: dev #Ĭ���ǿ�������      test���Ի���  prod ��������
+# freemarkerģ��
+  freemarker:
+    suffix: .ftl
+    request-context-attribute: request
+    content-type: text/html;charset=UTF-8
+    expose-spring-macro-helpers: true
+    expose-request-attributes: true
+    expose-session-attributes: true
+  datasource:
+      url: jdbc:mysql://192.168.61.119:3306/xxl-job?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
+      username: xxljob
+      password: xxljob123
+      db-name: xxl-job
+      filters: log4j,wall,mergeStat
+mybatis:
+  mapper-locations: classpath:mybatis-mapper/*.xml
+---
+xxl:
+  job:
+    mail:
+      username: job@shcem.com
+      url:  http://fms.uat.shcem.com/mapi/email/EmailSend
+    login:
+      password: 123456
+      username: admin
+    accessToken:
+    i18n:
+
+#logging
+logging:
+  level:
+    root: debug
+    org:
+      springframework: info
+  config: classpath:logback/logback-dev.xml
+  path: /data/logs/job
