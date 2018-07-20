@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 @Component
 public class ShcemJobHandler extends IJobHandler {
 
-    @Value("shcem.middle.url")
+    @Value("${shcem.middle.url}")
     private String Url;
     /**
      * execute handler, invoked when executor receives a scheduling request

@@ -129,7 +129,7 @@ public class JobLogController {
 		logDetailCatModel.setExecutorAddress(request.getParameter("executorAddress"));
 		logDetailCatModel.setTriggerTime(Long.parseLong(request.getParameter("triggerTime").replace(",","")));
 		logDetailCatModel.setFromLineNum(Integer.parseInt(request.getParameter("fromLineNum")));
-		logDetailCatModel.setLogId(Integer.parseInt(request.getParameter("logId")));
+		logDetailCatModel.setLogId(Integer.parseInt(request.getParameter("logId").replace(",","")));
 		try {
 			ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(logDetailCatModel.getExecutorAddress());
 			ReturnT<LogResult> logResult = executorBiz.log(logDetailCatModel.getTriggerTime(),

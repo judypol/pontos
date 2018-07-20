@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MLTPJobHandler extends IJobHandler {
 
-    @Value("mltp.middle.url")
+    @Value("${mltp.middle.url}")
     private String Url;
     /**
      * execute handler, invoked when executor receives a scheduling request

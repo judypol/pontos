@@ -1,5 +1,11 @@
 $(function() {
 
+    // input iCheck
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_square-blue',
+        radioClass: 'iradio_square-blue',
+        increaseArea: '20%' // optional
+    });
 	// init date tables
 	var jobTable = $("#job_list").dataTable({
 		"deferRender": true,
@@ -383,6 +389,10 @@ $(function() {
 		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 
         $("#updateModal .form select[name=glueType]").change();
+        if(row.holiday=='on'){
+            $('#updateModal .form input[name="holiday"]').attr('checked',true);
+		}
+
 
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');

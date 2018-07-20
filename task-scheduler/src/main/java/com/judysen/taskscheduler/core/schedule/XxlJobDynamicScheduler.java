@@ -26,6 +26,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -189,7 +190,7 @@ public class XxlJobDynamicScheduler implements ApplicationContextAware {
      * @return
      * @throws SchedulerException
      */
-	public static boolean addJob(String jobName, String jobGroup, String cronExpression) throws SchedulerException {
+	public static boolean addJob(String jobName, String jobGroup, String cronExpression,String holiday) throws SchedulerException {
     	// TriggerKey : name + group
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         JobKey jobKey = new JobKey(jobName, jobGroup);
@@ -202,7 +203,14 @@ public class XxlJobDynamicScheduler implements ApplicationContextAware {
         
         // CronTrigger : TriggerKey + cronExpression	// withMisfireHandlingInstructionDoNothing 忽略掉调度终止过程中忽略的调度
         CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
-        CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
+        CronTrigger cronTrigger;
+        if("on".equals(holiday)){
+            cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey)
+                    .withSchedule(cronScheduleBuilder).modifiedByCalendar("chineseHoliday").build();
+        }else{
+            cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey)
+                    .withSchedule(cronScheduleBuilder).build();
+        }
 
         // JobDetail : jobClass
 		Class<? extends Job> jobClass_ = RemoteHttpJobBean.class;   // Class.forName(jobInfo.getJobClass());
@@ -230,7 +238,8 @@ public class XxlJobDynamicScheduler implements ApplicationContextAware {
      * @return
      * @throws SchedulerException
      */
-	public static boolean rescheduleJob(String jobGroup, String jobName, String cronExpression) throws SchedulerException {
+	public static boolean rescheduleJob(String jobGroup, String jobName,
+                                        String cronExpression,String holiday) throws SchedulerException {
     	
     	// TriggerKey valid if_exists
         if (!checkExists(jobName, jobGroup)) {
@@ -251,14 +260,27 @@ public class XxlJobDynamicScheduler implements ApplicationContextAware {
 
             // CronTrigger : TriggerKey + cronExpression
             CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
-            oldTrigger = oldTrigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
+            if("on".equals(holiday)){
+                oldTrigger = oldTrigger.getTriggerBuilder().withIdentity(triggerKey)
+                        .withSchedule(cronScheduleBuilder).modifiedByCalendar("chineseHoliday").build();
+            }else{
+                oldTrigger = oldTrigger.getTriggerBuilder().withIdentity(triggerKey)
+                        .withSchedule(cronScheduleBuilder).build();
+            }
 
             // rescheduleJob
             scheduler.rescheduleJob(triggerKey, oldTrigger);
         } else {
             // CronTrigger : TriggerKey + cronExpression
             CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
-            CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
+            CronTrigger cronTrigger;
+            if("on".equals(holiday)){
+                cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey)
+                        .withSchedule(cronScheduleBuilder).modifiedByCalendar("chineseHoliday").build();
+            }else{
+                cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey)
+                        .withSchedule(cronScheduleBuilder).build();
+            }
 
             // JobDetail-JobDataMap fresh
             JobKey jobKey = new JobKey(jobName, jobGroup);

@@ -5,6 +5,7 @@
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="/adminlte/plugins/datatables/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="/adminlte/plugins/iCheck/square/blue.css">
     <title>${I18n.admin_name}</title>
 </head>
 <body class="hold-transition skin-blue sidebar-mini ">
@@ -124,7 +125,8 @@
                             </select>
                         </div>
                         <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="${I18n.system_please_input}Cron" maxlength="128" ></div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="jobCron" placeholder="${I18n.system_please_input}Cron" maxlength="128" ></div>
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_gluetype}<font color="red">*</font></label>
@@ -150,6 +152,15 @@
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
+                        <label for="firstname" class="col-sm-2 control-label">是否排除节假日</label>
+                        <div class="col-sm-4">
+                            <div class="checkbox icheck">
+                                <label>
+                                    <input type="checkbox" name="holiday" >
+                                </label>
+                            </div>
+                            <#--<input type="checkbox" class="form-control" name="holiday" >-->
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_timeout!''}<font color="black">*</font></label>
@@ -182,7 +193,7 @@
 
                     <hr>
 					<div class="form-group">
-						<div class="col-sm-offset-3 col-sm-6">
+						<div class="col-sm-offset-5 col-sm-12">
 							<button type="submit" class="btn btn-primary"  >${I18n.system_save}</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
 						</div>
@@ -320,6 +331,15 @@ process.exit(0)
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
+                        <label for="firstname" class="col-sm-2 control-label">是否排除节假日</label>
+                        <div class="col-sm-4">
+                            <div class="checkbox icheck">
+                                <label>
+                                    <input type="checkbox" name="holiday" >
+                                </label>
+                            </div>
+                        <#--<input type="checkbox" class="form-control" name="holiday" >-->
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
@@ -362,7 +382,7 @@ process.exit(0)
 
 					<hr>
 					<div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-6">
+                        <div class="col-sm-offset-5 col-sm-12">
 							<button type="submit" class="btn btn-primary"  >${I18n.system_save}</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
                             <input type="hidden" name="id" >
@@ -380,6 +400,7 @@ process.exit(0)
 <script src="/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script src="/plugins/jquery/jquery.validate.min.js"></script>
+<script src="/adminlte/plugins/iCheck/icheck.min.js"></script>
 <!-- moment -->
 <script src="/adminlte/plugins/daterangepicker/moment.min.js"></script>
 <script src="/js/jobinfo.index.1.js"></script>

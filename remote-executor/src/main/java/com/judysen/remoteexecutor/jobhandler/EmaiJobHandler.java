@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmaiJobHandler extends IJobHandler {
 
-    @Value("emai.middle.url")
+    @Value("${emai.middle.url}")
     private String Url;
     /**
      * execute handler, invoked when executor receives a scheduling request
