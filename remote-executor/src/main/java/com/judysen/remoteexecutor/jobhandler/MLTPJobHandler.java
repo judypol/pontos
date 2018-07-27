@@ -1,5 +1,6 @@
 package com.judysen.remoteexecutor.jobhandler;
 
+import com.alibaba.fastjson.JSON;
 import com.judysen.remoteexecutor.core.RemoteServiceInvoke;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -23,8 +24,9 @@ public class MLTPJobHandler extends IJobHandler {
      */
     @Override
     public ReturnT<String> execute(String param) throws Exception {
-        XxlJobLogger.log("MLTPJobHandler Start, the Param is "+param);
+        XxlJobLogger.log("MLTPJobHandler Start, the Param is "+param+"\nURL is "+this.Url);
         ReturnT ret= RemoteServiceInvoke.invokeService(this.Url,param,"emaiJobHander");
+        XxlJobLogger.log(JSON.toJSONString(ret));
         XxlJobLogger.log("MLTPJobHandler End");
         return ret;
     }
