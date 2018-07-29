@@ -11,7 +11,7 @@ export default new Router({
     },
     {
       path:'/',
-      name:'manager',
+      name:'home',
       component:resolve=>require(['../components/Home'],resolve),
       meta:{title:'首页'},
       children:[
