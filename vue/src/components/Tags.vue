@@ -46,13 +46,13 @@
                 if (item) {
                     delItem.path === this.$route.fullPath && this.$router.push(item.path);
                 }else{
-                    this.$router.push('/manager');
+                    this.$router.push('/');
                 }
             },
             // 关闭全部标签
             closeAll(){
                 this.tagsList = [];
-                this.$router.push('/manager');
+                this.$router.push('/');
             },
             // 关闭其他标签
             closeOther(){
@@ -93,7 +93,6 @@
     }
 
 </script>
-
 
 <style>
     .tags {
