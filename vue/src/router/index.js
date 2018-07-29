@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/pages/login'
 
 Vue.use(Router)
 
@@ -8,25 +7,41 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect:'/trigger'
+      redirect:'/home'
     },
     {
       path:'/',
       name:'manager',
       component:resolve=>require(['../components/Home'],resolve),
-      meta:{title:'管理'},
+      meta:{title:'首页'},
       children:[
         {
-          path:'/trigger',
-          component:resolve=>require(['../pages/trigger'],resolve),
-          meta:{title:'trigger'}
-        }
+          path:'/home',
+          component:resolve=>require(['../pages/home'],resolve),
+          meta:{title:'首页'}
+        },
+        {
+          path:'/task',
+          component:resolve=>require(['../pages/task'],resolve),
+          meta:{title:'任务列表'}
+        },
+        {
+          path:'/log',
+          component:resolve=>require(['../pages/task'],resolve),
+          meta:{title:'日志'}
+        },
+        {
+          path:'/excutor',
+          component:resolve=>require(['../pages/excutor'],resolve),
+          meta:{title:'执行器'}
+        },
       ]
     },
     {
       path: '/login',
       name: 'login',
-      component: resolve=>require(['../pages/login'],resolve)
+      component: resolve=>require(['../pages/login'],resolve),
+      meta:{title:'登录'}
     },
   ]
 })
