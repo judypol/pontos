@@ -13,13 +13,41 @@ spring:
     expose-request-attributes: true
     expose-session-attributes: true
   datasource:
-      url: jdbc:mysql://192.168.61.119:3306/xxl-job?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
-      username: xxljob
-      password: xxljob123
-      db-name: xxl-job
-      filters: log4j,wall,mergeStat
+      primary:
+          url: jdbc:mysql://192.168.61.119:3306/xxl-job?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
+          username: xxljob
+          password: xxljob123
+          driver-class-name: com.mysql.jdbc.Driver
+          dbType: mysql
+          # 下面为连接池的补充设置，应用到上面所有数据源中
+          # 初始化大小，最小，最大
+          initialSize: 1
+          minIdle: 3
+          maxActive: 20
+          # 配置获取连接等待超时的时间
+          maxWait: 60000
+          # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+          timeBetweenEvictionRunsMillis: 60000
+          # 配置一个连接在池中最小生存的时间，单位是毫秒
+          minEvictableIdleTimeMillis: 30000
+          validationQuery: select 'x'
+          testWhileIdle: true
+          testOnBorrow: false
+          testOnReturn: false
+          # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+          filters: stat,wall,slf4j
+          # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+          connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+          # 合并多个DruidDataSource的监控数据
+          #useGlobalDataSourceStat: true
+      second:
+          url: jdbc:mysql://192.168.61.120:3306/xxl-job?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
+          username: xxljob
+          password: xxljob123
+          driver-class-name: com.mysql.jdbc.Driver
+          dbType: mysql
 mybatis:
-  mapper-locations: classpath:mybatis-mapper/*.xml
+   mapper-locations: classpath:mybatis-mapper/*.xml
 ---
 xxl:
   job:

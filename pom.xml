@@ -8,7 +8,6 @@
 
 	<name>${project.artifactId}</name>
 	<description>A lightweight distributed task scheduling framework.</description>
-	<url>http://www.xuxueli.com/</url>
 
 	<modules>
 		<module>xxl-job-core</module>

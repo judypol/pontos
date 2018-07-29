@@ -36,7 +36,7 @@ public class TriggerCallbackThread {
     private LinkedBlockingQueue<HandleCallbackParam> callBackQueue = new LinkedBlockingQueue<HandleCallbackParam>();
     public static void pushCallBack(HandleCallbackParam callback){
         getInstance().callBackQueue.add(callback);
-        logger.debug(">>>>>>>>>>> xxl-job, push callback request, logId:{}", callback.getLogId());
+        logger.debug(">>>>>>>>>>> pontos-job, push callback request, logId:{}", callback.getLogId());
     }
 
     /**
@@ -49,7 +49,7 @@ public class TriggerCallbackThread {
 
         // valid
         if (XxlJobExecutor.getAdminBizList() == null) {
-            logger.warn(">>>>>>>>>>> xxl-job, executor callback config fail, adminAddresses is null.");
+            logger.warn(">>>>>>>>>>> pontos-job, executor callback config fail, adminAddresses is null.");
             return;
         }
 
@@ -90,7 +90,7 @@ public class TriggerCallbackThread {
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor callback thread destory.");
+                logger.info(">>>>>>>>>>> pontos-job, executor callback thread destory.");
 
             }
         });
@@ -114,7 +114,7 @@ public class TriggerCallbackThread {
                         logger.error(e.getMessage(), e);
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor retry callback thread destory.");
+                logger.info(">>>>>>>>>>> pontos-job, executor retry callback thread destory.");
             }
         });
         triggerRetryCallbackThread.setDaemon(true);
@@ -151,14 +151,14 @@ public class TriggerCallbackThread {
             try {
                 ReturnT<String> callbackResult = adminBiz.callback(callbackParamList);
                 if (callbackResult!=null && ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
-                    callbackLog(callbackParamList, "<br>----------- xxl-job job callback finish.");
+                    callbackLog(callbackParamList, "<br>----------- pontos-job job callback finish.");
                     callbackRet = true;
                     break;
                 } else {
-                    callbackLog(callbackParamList, "<br>----------- xxl-job job callback fail, callbackResult:" + callbackResult);
+                    callbackLog(callbackParamList, "<br>----------- pontos-job job callback fail, callbackResult:" + callbackResult);
                 }
             } catch (Exception e) {
-                callbackLog(callbackParamList, "<br>----------- xxl-job job callback error, errorMsg:" + e.getMessage());
+                callbackLog(callbackParamList, "<br>----------- pontos-job job callback error, errorMsg:" + e.getMessage());
             }
         }
         if (!callbackRet) {

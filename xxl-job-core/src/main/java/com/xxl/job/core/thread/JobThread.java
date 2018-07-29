@@ -121,7 +121,7 @@ public class JobThread extends Thread{
 					ShardingUtil.setShardingVo(new ShardingUtil.ShardingVO(triggerParam.getBroadcastIndex(), triggerParam.getBroadcastTotal()));
 
 					// execute
-					XxlJobLogger.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + triggerParam.getExecutorParams());
+					XxlJobLogger.log("<br>----------- pontos-job job execute start -----------<br>----------- Param:" + triggerParam.getExecutorParams());
 
 					if (triggerParam.getExecutorTimeout() > 0) {
 						// limit timeout
@@ -140,7 +140,7 @@ public class JobThread extends Thread{
 							executeResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
 						} catch (TimeoutException e) {
 
-							XxlJobLogger.log("<br>----------- xxl-job job execute timeout");
+							XxlJobLogger.log("<br>----------- pontos-job job execute timeout");
 							XxlJobLogger.log(e);
 
 							executeResult = new ReturnT<String>(IJobHandler.FAIL_TIMEOUT.getCode(), "job execute timeout ");
@@ -155,7 +155,7 @@ public class JobThread extends Thread{
 					if (executeResult == null) {
 						executeResult = IJobHandler.FAIL;
 					}
-					XxlJobLogger.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
+					XxlJobLogger.log("<br>----------- pontos-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
 
 				} else {
 					if (idleTimes > 30) {
@@ -205,6 +205,6 @@ public class JobThread extends Thread{
 			logger.error(e.getMessage(), e);
 		}
 
-		logger.info(">>>>>>>>>>> xxl-job JobThread stoped, hashCode:{}", Thread.currentThread());
+		logger.info(">>>>>>>>>>> pontos-job JobThread stoped, hashCode:{}", Thread.currentThread());
 	}
 }

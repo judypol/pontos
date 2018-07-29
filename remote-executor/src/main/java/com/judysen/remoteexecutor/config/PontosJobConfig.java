@@ -9,40 +9,43 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * xxl-job config
+ * pontos-job config
  *
  * @author xuxueli 2017-04-28
  */
 @Configuration
 @ComponentScan(basePackages = "com.judysen.remoteexecutor.jobhandler")
-public class XxlJobConfig {
-    private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
+public class PontosJobConfig {
+    private Logger logger = LoggerFactory.getLogger(PontosJobConfig.class);
 
-    @Value("${xxl.job.admin.addresses}")
+    @Value("${pontos.job.admin.addresses}")
     private String adminAddresses;
 
-    @Value("${xxl.job.executor.appname}")
+    @Value("${pontos.job.executor.appname}")
     private String appName;
 
-    @Value("${xxl.job.executor.ip}")
+    @Value("${pontos.job.executor.ip}")
     private String ip;
 
-    @Value("${xxl.job.executor.port}")
+    @Value("${pontos.job.executor.port}")
     private int port;
 
-    @Value("${xxl.job.accessToken}")
+    @Value("${pontos.job.accessToken}")
     private String accessToken;
 
-    @Value("${xxl.job.executor.logpath}")
+    @Value("${pontos.job.executor.logpath}")
     private String logPath;
 
-    @Value("${xxl.job.executor.logretentiondays}")
+    @Value("${pontos.job.executor.logretentiondays}")
     private int logRetentionDays;
 
-
+    /**
+     * 初始化一个执行器，可以包括多个handler
+     * @return
+     */
     @Bean(initMethod = "start", destroyMethod = "destroy")
     public XxlJobExecutor xxlJobExecutor() {
-        logger.info(">>>>>>>>>>> xxl-job config init.");
+        logger.info(">>>>>>>>>>> pontos-job config init.");
         XxlJobExecutor xxlJobExecutor = new XxlJobExecutor();
         xxlJobExecutor.setAdminAddresses(adminAddresses);
         xxlJobExecutor.setAppName(appName);
