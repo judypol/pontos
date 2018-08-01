@@ -1,6 +1,6 @@
 <template>
     <div class="login-wrap">
-        <div class="ms-title">配置中心</div>
+        <div class="ms-title">任务调度中心</div>
         <div class="ms-login">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
                 <el-form-item prop="username">
@@ -24,7 +24,7 @@
             return {
                 ruleForm: {
                     username: 'admin',
-                    password: '123123'
+                    password: '123456'
                 },
                 rules: {
                     username: [
@@ -40,8 +40,12 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        // localStorage.setItem('ms_username',this.ruleForm.username);
-                        this.$router.push('/');
+                        this.$axios.post('login',{userName:this.ruleForm.username,password:this.ruleForm.password})
+                        .then((res)=>{
+                            this.$store.commit('setAuthKey',{name:this.$conf.authKey,value:this.ruleForm.username});
+                            this.$router.push('/');
+                        });
+                        
                         console.log('sdfs');
                     } else {
                         console.log('error submit!!');

@@ -28,7 +28,7 @@
     export default {
         data() {
             return {
-                collapse: false,
+                // collapse: false,
                 items: [
                     {
                         icon: 'el-icon-setting',
@@ -66,7 +66,7 @@
         },
         props:{
             collapse:{
-                type:String,
+                type:Boolean,
                 default:false
             }
         }
