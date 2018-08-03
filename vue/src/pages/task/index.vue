@@ -24,16 +24,16 @@
         </el-form>
         <div class="tb">
             <el-table border :data="tbModel.data">
-                <el-table-column label="任务ID" width="80" prop="id"></el-table-column>
-                <el-table-column label="任务描述" width="250" prop="jobDesc"></el-table-column>
-                <el-table-column label="运行模式" width="250">
+                <el-table-column label="任务ID" prop="id" width="80"></el-table-column>
+                <el-table-column label="任务描述" prop="jobDesc"></el-table-column>
+                <el-table-column label="运行模式" >
                     <template slot-scope="scope">
                         {{scope.row.glueType}} - {{scope.row.executorHandler}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Cron" width="150" prop="jobCron"></el-table-column>
-                <el-table-column label="负责人" width="100" prop="author"></el-table-column>
-                <el-table-column label="状态" width="150">
+                <el-table-column label="Cron" prop="jobCron"></el-table-column>
+                <el-table-column label="负责人" prop="author"></el-table-column>
+                <el-table-column label="状态" >
                     <template slot-scope="scope">
                         <template v-if="scope.row.jobStatus=='NORMAL'">
                             <el-tag type="success">{{scope.row.jobStatus}}</el-tag>
@@ -43,13 +43,18 @@
                         </template>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" width="250">
                     <template slot-scope="scope">
-                        <el-button @click="handleClick(scope.row)" type="text" size="small">执行</el-button>
-                        <el-button type="text" size="small">暂停</el-button>
-                        <el-button type="text" size="small">日志</el-button>
+                        <el-button @click="triggerJob(scope.row)" type="text" size="small">执行</el-button>
+                        <template v-if="scope.row.jobStatus=='NORMAL'">
+                            <el-button type="text" size="small" @click.prevent="pause(scope.row)">暂停</el-button>
+                        </template>
+                        <template v-else>
+                            <el-button type="text" size="small" @click.prevent="resume(scope.row)">恢复</el-button>
+                        </template>
+                        <el-button type="text" size="small" @click.prevent="handleLog(scope.row)">日志</el-button>
                         <el-button type="text" size="small" @click.prevent="editTaskInfo(scope.row)">编辑</el-button>
-                        <el-button type="text" size="small">删除</el-button>
+                        <el-button type="text" size="small" @click.prevent="removeTask(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -91,7 +96,7 @@ export default {
                 title:'XXX',
             },
             dialogModel:{
-                id:null,
+                id:0,
                 jobGroup:null,
                 jobCron:'',
                 jobDesc:'',
@@ -163,8 +168,8 @@ export default {
         openAddDialog(title){
             this.dialog.title=title;
             this.dialogModel={
-                id:null,
-                jobGroup:null,
+                id:0,
+                jobGroup:this.$store.state.executors[0].id,
                 jobCron:'',
                 jobDesc:'',
                 author:'',
@@ -187,7 +192,72 @@ export default {
                 this.dialogModel[p]=row[p];
             }
             this.dialogModel.visible=true;
-        }
+        },
+        triggerJob(row){
+            this.$confirm('确定执行？','系统消息').then(()=>{
+                this.$axios.post('/jobinfo/trigger',{id:row.id})
+                .then((res)=>{
+                    if(res.code===200){
+                        this.$alert('执行成功');
+                    }else{
+                        this.$message.error(res.msg);
+                    }
+                })
+            }).catch(()=>{
+                    console.log('quxiao');
+            });
+        },
+        pause(row){
+            this.$confirm('确定暂停？','系统消息').then(()=>{
+                this.$axios.post('/jobinfo/pause',{id:row.id})
+                .then((res)=>{
+                    if(res.code===200){
+                        this.$alert('暂停成功').then(()=>{
+                            this.onSearch();
+                        });
+                    }else{
+                        this.$message.error(res.msg);
+                    }
+                })
+            }).catch(()=>{
+                    console.log('pause');
+            });
+        },
+        resume(row){
+            this.$confirm('确定恢复？','系统消息').then(()=>{
+                this.$axios.post('/jobinfo/resume',{id:row.id})
+                .then((res)=>{
+                    if(res.code===200){
+                        this.$alert('恢复成功').then(()=>{
+                            this.onSearch();
+                        });
+                    }else{
+                        this.$message.error(res.msg);
+                    }
+                })
+            }).catch(()=>{
+                    console.log('resume');
+            });
+        },
+        removeTask(row){
+            this.$confirm('确定删除？','系统消息').then(()=>{
+                this.$axios.post('/jobinfo/remove',{id:row.id})
+                .then((res)=>{
+                    if(res.code===200){
+                        this.$alert('删除成功').then(()=>{
+                            this.onSearch();
+                        });
+                    }else{
+                        this.$message.error(res.msg);
+                    }
+                })
+            }).catch(()=>{
+                    console.log('删除');
+            });
+        },
+        handleLog(row){
+            this.$router.push({path:'/log',query:{id:row.id}});
+        },
     },
     created(){
         // this.$store.dispatch('setExcutors');

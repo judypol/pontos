@@ -36,7 +36,14 @@ public class JobGroupController {
 		model.addAttribute("list", list);
 		return "jobgroup/jobgroup.index";
 	}
-
+	@RequestMapping("/groupList")
+	@ResponseBody
+	public ReturnT<List<XxlJobGroup>> groupList(){
+		// job group (executor)
+		List<XxlJobGroup> list = xxlJobGroupDao.findAll();
+		ReturnT<List<XxlJobGroup>> rtn=new ReturnT<>(list);
+		return rtn;
+	}
 	@RequestMapping("/save")
 	@ResponseBody
 	public ReturnT<String> save(XxlJobGroup xxlJobGroup){

@@ -63,7 +63,7 @@ xxl:
 #logging
 logging:
   level:
-    root: debug
+    root: info
     org:
       springframework: info
   config: classpath:logback/logback-dev.xml

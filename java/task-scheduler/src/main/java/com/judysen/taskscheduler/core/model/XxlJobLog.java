@@ -1,5 +1,7 @@
 package com.judysen.taskscheduler.core.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -23,11 +25,13 @@ public class XxlJobLog {
 	private String executorParam;
 	
 	// trigger info
+
 	private Date triggerTime;
 	private int triggerCode;
 	private String triggerMsg;
 	
 	// handle info
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date handleTime;
 	private int handleCode;
 	private String handleMsg;
@@ -87,7 +91,7 @@ public class XxlJobLog {
 	public void setExecutorParam(String executorParam) {
 		this.executorParam = executorParam;
 	}
-
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	public Date getTriggerTime() {
 		return triggerTime;
 	}
@@ -115,7 +119,7 @@ public class XxlJobLog {
 		}
 		this.triggerMsg = triggerMsg;
 	}
-
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	public Date getHandleTime() {
 		return handleTime;
 	}

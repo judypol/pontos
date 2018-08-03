@@ -159,18 +159,39 @@ export default {
             if(!this.dialogModel.jobGroup){
                     this.$message('执行器不能为空');
                     return false;
-                }
+            }
+            var alertTitle='新增任务成功！';
+            if(this.dialogModel.id!=0){
+                alertTitle='编辑任务成功！'
+            }
             this.$refs['taskForm'].validate((valid) => {
-                
                 if (valid) {
-                    this.$emit('refresh');
-                    this.dialogModel.visible=false;
+                    var url='/jobinfo/update';
+                    if(this.dialogModel.id==0){
+                        url='/jobinfo/add';
+                    }
+                    this.$axios.post(url,this.dialogModel)
+                        .then((res)=>{
+                            if(res.code===200){
+                                this.$alert(alertTitle, '确定', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.$emit('refresh');
+                                        this.dialogModel.visible=false;
+                                    }
+                                });
+                            }
+                            else{
+                                this.$message.error(res.msg);
+                            }
+                    });
+                    
                 } else {
                     console.log('error submit!!');
                     return false;
                 }
             });
-        }
+        },
     },
     props:['model','title'],
     // computed:{

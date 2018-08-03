@@ -27,7 +27,7 @@ export default new Router({
         },
         {
           path:'/log',
-          component:resolve=>require(['../pages/task'],resolve),
+          component:resolve=>require(['../pages/log'],resolve),
           meta:{title:'日志'}
         },
         {

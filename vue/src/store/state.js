@@ -1,6 +1,9 @@
 var state={
     authKey:null,
     executors:[],        //执行器
+    logStatus:[
+        {value:-1,name:'全部'},{value:1,name:'成功'},{value:2,name:'失败'},{value:3,name:'运行中'},
+    ],
     jobHandlers:[],      //jobHandlers
     executorRoute:[      //执行路径策略
        { value:'FIRST',name:'第一个'},{ value:'LAST',name:'最后一个'},{ value:'ROUND',name:'轮询'},{ value:'RANDOM',name:'随机'},

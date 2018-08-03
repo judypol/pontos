@@ -1,5 +1,6 @@
 package com.judysen.taskscheduler.controller;
 
+import com.judysen.taskscheduler.controller.annotation.PermessionLimit;
 import com.judysen.taskscheduler.core.enums.ExecutorFailStrategyEnum;
 import com.judysen.taskscheduler.core.model.XxlJobGroup;
 import com.judysen.taskscheduler.core.model.XxlJobInfo;
@@ -11,6 +12,7 @@ import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * index controller
@@ -48,7 +51,17 @@ public class JobInfoController {
 
 		return "jobinfo/jobinfo.index";
 	}
-	
+	@RequestMapping("/groupList")
+	@ResponseBody
+	@PermessionLimit(limit=false)
+	public ReturnT<List<XxlJobGroup>> groupList(String filter){
+		// 任务组
+		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
+		if(!StringUtils.isEmpty(filter)){
+			jobGroupList=jobGroupList.stream().filter(x->x.getTitle().contains(filter)).collect(Collectors.toList());
+		}
+		return new ReturnT<>(jobGroupList);
+	}
 	@RequestMapping("/pageList")
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
