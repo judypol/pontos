@@ -53,11 +53,7 @@
         </el-dialog>
     </div>
 </template>
-<style>
-    .el-table td, .el-table th{
-        padding:5px 0;
-    }
-</style>
+
 <script>
 import ExecutorModel from '../../models/executorModel';
 export default {
