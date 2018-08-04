@@ -99,11 +99,11 @@ public class XxlJobTrigger {
                     triggerParam.setBroadcastIndex(i);
                     triggerParam.setBroadcastTotal(addressList.size()); // update02
 
-                    // 4.2、trigger-run (route run / trigger remote executor)
+                    // 4.2、trigger-run (route run / trigger remote executor)，执行远程操作
                     triggerResult = runExecutor(triggerParam, address);     // update03
                     triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_run") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
 
-                    // 4.3、trigger (fail retry)
+                    // 4.3、trigger (fail retry)         //失败重试
                     if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && failStrategy == ExecutorFailStrategyEnum.FAIL_TRIGGER_RETRY) {
                         triggerResult = runExecutor(triggerParam, address);  // update04
                         triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_trigger_retry") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());

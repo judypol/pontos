@@ -23,7 +23,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click.prevent="onSearch">搜 索</el-button>
-                    <el-button type="warning">清 理</el-button>
+                    <el-button type="warning" @click.prevent="()=>{dialogVisible=true;}">清 理</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -88,6 +88,21 @@
             </el-table>
             <el-pagination :background="true" layout="prev, pager, next" :total="tbModel.recordsTotal" :current-page.sync="currentPage" @current-change="onSearch"></el-pagination>
         </div>
+        <el-dialog :title="删除日志" :visible.sync="dialogVisible">
+            <el-radio v-model="radio" label="1">清理一个月之前日志数据</el-radio>
+            <el-radio v-model="radio" label="2">清理三个月之前日志数据</el-radio>
+            <el-radio v-model="radio" label="3">清理六个月之前日志数据</el-radio>
+            <el-radio v-model="radio" label="4">清理一年之前日志数据</el-radio>
+            <el-radio v-model="radio" label="5">清理一千条以前日志数据</el-radio>
+            <el-radio v-model="radio" label="6">清理一万条以前日志数据</el-radio>
+            <el-radio v-model="radio" label="7">清理三万条以前日志数据</el-radio>
+            <el-radio v-model="radio" label="8">清理十万条以前日志数据</el-radio>
+            <el-radio v-model="radio" label="9">所有</el-radio>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -111,6 +126,8 @@ export default {
             jobs:[],
             logStatus:this.$store.state.logStatus,
             currentPage:1,
+            dialogVisible:false,
+            radio:1,
         }
     },
     methods:{
@@ -138,7 +155,7 @@ export default {
                         this.searchModel.jobId=-1;
                     }
                 })
-        }
+        },
     },
     computed:{
         executors:function(){
