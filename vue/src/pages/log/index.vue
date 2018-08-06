@@ -55,10 +55,13 @@
                 <el-table-column label="执行结果" prop="handleCode">
                     <template slot-scope="scope">
                         <template v-if="scope.row.handleCode===0">
-                            <span style="color:red">失败</span>
+                            <span style="color:red"></span>
+                        </template>
+                        <template v-else-if="scope.row.handleCode===200">
+                            <span style="color:green">成功</span>
                         </template>
                         <template v-else>
-                            <span style="color:green">成功</span>
+                            <span style="color:red">失败</span>
                         </template>
                     </template>
                 </el-table-column>
@@ -80,7 +83,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button size="small" type="primary">查看日志</el-button>
+                        <el-button size="small" type="primary" @click.prevent="logDetailCat(scope.row)">查看日志</el-button>
                         <el-button size="small" type="warning">终止任务</el-button>
                     </template>
                     
@@ -88,23 +91,64 @@
             </el-table>
             <el-pagination :background="true" layout="prev, pager, next" :total="tbModel.recordsTotal" :current-page.sync="currentPage" @current-change="onSearch"></el-pagination>
         </div>
-        <el-dialog :title="删除日志" :visible.sync="dialogVisible">
-            <el-radio v-model="radio" label="1">清理一个月之前日志数据</el-radio>
-            <el-radio v-model="radio" label="2">清理三个月之前日志数据</el-radio>
-            <el-radio v-model="radio" label="3">清理六个月之前日志数据</el-radio>
-            <el-radio v-model="radio" label="4">清理一年之前日志数据</el-radio>
-            <el-radio v-model="radio" label="5">清理一千条以前日志数据</el-radio>
-            <el-radio v-model="radio" label="6">清理一万条以前日志数据</el-radio>
-            <el-radio v-model="radio" label="7">清理三万条以前日志数据</el-radio>
-            <el-radio v-model="radio" label="8">清理十万条以前日志数据</el-radio>
-            <el-radio v-model="radio" label="9">所有</el-radio>
+        <el-dialog title="删除日志" :visible.sync="dialogVisible" width="300px" class="clearDialog">
+            <div>
+                <el-radio v-model="radio" label="1" :border="true">清理一个月之前日志数据</el-radio>
+            </div>
+            <div>
+                <el-radio v-model="radio" label="2" :border="true">清理三个月之前日志数据</el-radio>
+            </div>
+            <div>
+                <el-radio v-model="radio" label="3" :border="true">清理六个月之前日志数据</el-radio>
+            </div>
+            <div>
+                <el-radio v-model="radio" label="4" :border="true">清理一年之前日志数据</el-radio>
+            </div>
+            <div>
+                <el-radio v-model="radio" label="5" :border="true">清理一千条以前日志数据</el-radio>
+            </div>
+            <div>
+                <el-radio v-model="radio" label="6" :border="true">清理一万条以前日志数据</el-radio>
+            </div>
+            <div>
+                <el-radio v-model="radio" label="7" :border="true">清理三万条以前日志数据</el-radio>
+            </div>
+            <div>
+                <el-radio v-model="radio" label="8" :border="true">清理十万条以前日志数据</el-radio>
+            </div>
+            <div>
+                <el-radio v-model="radio" label="9" :border="true">所有</el-radio>
+            </div>
+            
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="deleteLogs">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="日志详情" :visible.sync="logDetailPage.dialogVisible">
+            <div v-html="logDetailPage.logContent" class="logDetail"></div>
+            <span slot="footer" class="dialog-footer">
+                <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
+                <el-button type="primary" @click="logDetailPage.dialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
+<style scoped>
+    /* .el-radio{
+        padding:5px;
+    } */
+    .clearDailog >div{
+        padding-top: 5px;
+    }
+    .logDetail{
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 30px;
+        color:green;
+    }
+</style>
+
 <script>
 import moment from 'moment'
 export default {
@@ -127,7 +171,11 @@ export default {
             logStatus:this.$store.state.logStatus,
             currentPage:1,
             dialogVisible:false,
-            radio:1,
+            radio:"1",
+            logDetailPage:{
+                logContent:'',
+                dialogVisible:false
+            }
         }
     },
     methods:{
@@ -141,7 +189,7 @@ export default {
             this.searchModel.start=this.currentPage-1;
             this.$axios.post('/joblog/pageList',this.searchModel).then((res)=>{
                 if(res.data){
-                    this.tbModel.data=res.data;
+                    this.tbModel.data=JSON.parse(res.data);
                     this.tbModel.recordsTotal=res.recordsTotal;
                 }
             });
@@ -156,6 +204,34 @@ export default {
                     }
                 })
         },
+        deleteLogs(){
+            this.$confirm('是否删除？','系统提示')
+            .then(()=>{
+
+                this.$axios.post('/joblog/clearLog',{jobGroup:this.searchModel.jobGroup,jobId:this.searchModel.jobId,type:this.radio})
+                    .then((res)=>{
+                        if(res.code===200){
+                            this.$message('删除成功！');
+                            this.onSearch();
+                        } 
+                    });
+                this.dialogVisible = false;
+            }).catch(()=>{
+                this.dialogVisible = false;
+            });
+            
+        },
+        logDetailCat(row){
+            this.logDetailPage.logContent='';
+            this.$axios.post('/joblog/logDetailCat',row).then((res)=>{
+                if(res.code===200){
+                    this.logDetailPage.logContent=res.content.logContent;
+                    this.logDetailPage.dialogVisible=true;
+                }else{
+                    this.$message.error(res.msg);
+                }
+            });
+        }
     },
     computed:{
         executors:function(){
