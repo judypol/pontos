@@ -8,9 +8,11 @@ import com.judysen.taskscheduler.controller.interceptor.PermissionInterceptor;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -20,8 +22,9 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 //        InterceptorRegistration permissionAddInterceptor = registry.addInterceptor(getPermissionInterceptor());
 //        permissionAddInterceptor.addPathPatterns("/**").excludePathPatterns("/adminlte/**","/js/**","/plugins/**","/error","/toLogin");
 
-        InterceptorRegistration cookieAddInterceptor = registry.addInterceptor(getCookieInterceptor());
-        cookieAddInterceptor.addPathPatterns("/**").excludePathPatterns("/adminlte/**","/js/**","/plugins/**","/error");
+//        InterceptorRegistration cookieAddInterceptor = registry.addInterceptor(getCookieInterceptor());
+//        cookieAddInterceptor.addPathPatterns("/**").excludePathPatterns("/adminlte/**","/js/**","/plugins/**","/error");
+        super.addInterceptors(registry);
     }
     @Override
     protected void addCorsMappings(CorsRegistry registry) {
@@ -31,15 +34,15 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
                 .maxAge(3600)
                 .allowCredentials(true);
     }
-    @Bean
-    public CookieInterceptor getCookieInterceptor() {
-        return new CookieInterceptor();
-    }
-
-    @Bean
-    public PermissionInterceptor getPermissionInterceptor(){
-        return  new PermissionInterceptor();
-    }
+//    @Bean
+//    public CookieInterceptor getCookieInterceptor() {
+//        return new CookieInterceptor();
+//    }
+//
+//    @Bean
+//    public PermissionInterceptor getPermissionInterceptor(){
+//        return  new PermissionInterceptor();
+//    }
     /**
      * 配置FastJson方式二
      * @return  HttpMessageConverters
@@ -51,6 +54,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         // 2.添加fastjson的配置信息，比如: 是否需要格式化返回的json数据
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+        //fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
+        //2-1 处理中文乱码问题
+        List<MediaType> fastMediaTypes = new ArrayList<>();
+        fastMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+        fastConverter.setSupportedMediaTypes(fastMediaTypes);
         // 3.在converter中添加配置信息
         fastConverter.setFastJsonConfig(fastJsonConfig);
         // 4.将converter赋值给HttpMessageConverter

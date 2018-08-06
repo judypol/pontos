@@ -1,5 +1,6 @@
 package com.judysen.taskscheduler.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.judysen.taskscheduler.core.model.XxlJobGroup;
 import com.judysen.taskscheduler.core.model.XxlJobInfo;
 import com.judysen.taskscheduler.core.model.XxlJobLog;
@@ -99,7 +100,7 @@ public class JobLogController {
 		Map<String, Object> maps = new HashMap<String, Object>();
 	    maps.put("recordsTotal", list_count);		// 总记录数
 	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-	    maps.put("data", list);  					// 分页列表
+	    maps.put("data",JSON.toJSONString(list));  					// 分页列表
 		return maps;
 	}
 
@@ -123,13 +124,14 @@ public class JobLogController {
 
 	@RequestMapping("/logDetailCat")
 	@ResponseBody
-	public ReturnT<LogResult> logDetailCat(){
+	public ReturnT<LogResult> logDetailCat() throws Exception{
 		Map<String, String[]> map=request.getParameterMap();
 		LogDetailCatModel logDetailCatModel=new LogDetailCatModel();
 		logDetailCatModel.setExecutorAddress(request.getParameter("executorAddress"));
-		logDetailCatModel.setTriggerTime(Long.parseLong(request.getParameter("triggerTime").replace(",","")));
-		logDetailCatModel.setFromLineNum(Integer.parseInt(request.getParameter("fromLineNum")));
-		logDetailCatModel.setLogId(Integer.parseInt(request.getParameter("logId").replace(",","")));
+//		logDetailCatModel.setTriggerTime(Long.parseLong(request.getParameter("triggerTime").replace(",","")));
+		logDetailCatModel.setTriggerTime(DateUtils.parseDate(request.getParameter("triggerTime"),"yyyy-MM-dd HH:mm:ss").getTime());
+//		logDetailCatModel.setFromLineNum(Integer.parseInt(request.getParameter("fromLineNum")));
+		logDetailCatModel.setLogId(Integer.parseInt(request.getParameter("id").replace(",","")));
 		try {
 			ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(logDetailCatModel.getExecutorAddress());
 			ReturnT<LogResult> logResult = executorBiz.log(logDetailCatModel.getTriggerTime(),
