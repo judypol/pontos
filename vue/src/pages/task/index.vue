@@ -256,7 +256,7 @@ export default {
             });
         },
         handleLog(row){
-            this.$router.push({path:'/log',query:{id:row.id}});
+            this.$router.push({path:'/log',query:{jobId:row.id,jobGroup:row.jobGroup}});
         },
     },
     created(){

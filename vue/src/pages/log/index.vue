@@ -18,7 +18,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="调度时间">
-                    <el-date-picker v-model="searchModel.dateRange" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="开始日期" 
+                    <el-date-picker v-model="searchModel.dateRange" value-format="yyyy-MM-dd HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="开始日期" 
                     end-placeholder="结束日期" unlink-panels> </el-date-picker>
                 </el-form-item>
                 <el-form-item>
@@ -161,7 +161,7 @@ export default {
                 jobId:-1,
                 logStatus:-1,
                 filterTime:'',
-                dateRange:[moment(new Date()).format('YYYY-MM-DD'),moment(new Date()).format('YYYY-MM-DD')]
+                dateRange:[moment(new Date()).format('YYYY-MM-DD 00:00:00'),moment(new Date()).format('YYYY-MM-DD 23:59:59')]
             },
             tbModel:{
                 data:[],
@@ -241,9 +241,11 @@ export default {
         }
     },
     created(){
-        this.onSearch();
         this.$store.dispatch('setExecutors');
+        this.searchModel.jobGroup=this.$route.query.jobGroup?this.$route.query.jobGroup:-1;
         this.getJobsByGroup();
+        this.searchModel.jobId=this.$route.query.jobId?this.$route.query.jobId:-1;
+        this.onSearch();
         // that.executors=that.$store.state.executors;
         //     that.searchModel.jobGroup=that.executors[0].id;
         //     that.getJobsByGroup();

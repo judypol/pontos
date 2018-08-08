@@ -6,6 +6,7 @@ import com.judysen.taskscheduler.core.util.I18nUtil;
 import com.judysen.taskscheduler.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,11 +41,19 @@ public class IndexController {
 
 		return "index";
 	}
+	@RequestMapping("/dashboard")
+	@ResponseBody
+	public ReturnT<Map> dashboard(){
+		Map<String, Object> dashboardMap = xxlJobService.dashboardInfo();
+		return new ReturnT<>(dashboardMap);
+	}
 
     @RequestMapping("/chartInfo")
 	@ResponseBody
-	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
-        ReturnT<Map<String, Object>> chartInfo = xxlJobService.chartInfo(startDate, endDate);
+	public ReturnT<Map<String, Object>> chartInfo(String startDate, String endDate) throws Exception {
+
+        ReturnT<Map<String, Object>> chartInfo = xxlJobService.chartInfo(DateUtils.parseDate(startDate,"yyyy-MM-dd HH:mm:ss"),
+				DateUtils.parseDate(endDate,"yyyy-MM-dd HH:mm:ss"));
         return chartInfo;
     }
 	
