@@ -19,7 +19,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click.prevent="onSearch">搜索</el-button>
-                 <el-button type="success" @click.prevent="openAddDialog('新增任务')">新增任务</el-button>
+                <el-button type="success" @click.prevent="openAddDialog('新增任务')">新增任务</el-button>
             </el-form-item>
         </el-form>
         <div class="tb">
@@ -163,7 +163,7 @@ export default {
             };
         },
         handleCurrentChange(val){
-            console.log(val);
+            onSearch();
         },
         openAddDialog(title){
             this.dialog.title=title;
