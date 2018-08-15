@@ -84,14 +84,14 @@
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button size="small" type="primary" @click.prevent="logDetailCat(scope.row)">查看日志</el-button>
-                        <el-button size="small" type="warning">终止任务</el-button>
+                        <!-- <el-button size="small" type="warning">终止任务</el-button> -->
                     </template>
-                    
                 </el-table-column>
             </el-table>
-            <el-pagination :background="true" layout="prev, pager, next" :total="tbModel.recordsTotal" :current-page.sync="currentPage" @current-change="onSearch"></el-pagination>
+            <el-pagination :background="true" layout="prev, pager, next" :total="tbModel.recordsTotal" :page-size="15" 
+                :current-page.sync="currentPage" @current-change="onSearch"></el-pagination>
         </div>
-        <el-dialog title="删除日志" :visible.sync="dialogVisible" width="300px" class="clearDialog">
+        <el-dialog title="删除日志" :visible.sync="dialogVisible" width="300px" class="clearDialog" :close-on-click-modal="false">
             <div>
                 <el-radio v-model="radio" label="1" :border="true">清理一个月之前日志数据</el-radio>
             </div>
@@ -125,7 +125,7 @@
                 <el-button type="primary" @click="deleteLogs">确 定</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="日志详情" :visible.sync="logDetailPage.dialogVisible">
+        <el-dialog title="日志详情" :visible.sync="logDetailPage.dialogVisible" width="80%" :close-on-click-modal="false">
             <div v-html="logDetailPage.logContent" class="logDetail"></div>
             <span slot="footer" class="dialog-footer">
                 <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
@@ -144,8 +144,10 @@
     .logDetail{
         font-size: 16px;
         font-weight: 500;
-        line-height: 30px;
+        line-height: 25px;
         color:green;
+        word-wrap:break-word;
+        word-break:break-all;
     }
 </style>
 
@@ -186,7 +188,7 @@ export default {
         },
         onSearch(){
             this.getFilterTime();
-            this.searchModel.start=this.currentPage-1;
+            this.searchModel.start=(this.currentPage-1)*15;
             this.$axios.post('/joblog/pageList',this.searchModel).then((res)=>{
                 if(res.data){
                     this.tbModel.data=JSON.parse(res.data);

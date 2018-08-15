@@ -54,11 +54,11 @@
                         </template>
                         <el-button type="text" size="small" @click.prevent="handleLog(scope.row)">日志</el-button>
                         <el-button type="text" size="small" @click.prevent="editTaskInfo(scope.row)">编辑</el-button>
-                        <el-button type="text" size="small" @click.prevent="removeTask(scope.row)">删除</el-button>
+                        <!-- <el-button type="text" size="small" @click.prevent="removeTask(scope.row)">删除</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination background layout="prev, pager, next" :total="tbModel.total" :page-size="15" @current-change="handleCurrentChange"></el-pagination>
+            <el-pagination background layout="prev, pager, next" :total="tbModel.total" :current-page.sync="currentPage" :page-size="15" @current-change="handleCurrentChange"></el-pagination>
         </div>
         <task-info :title="dialog.title" :model="dialogModel" @refresh="onSearch"></task-info>
     </div>
@@ -84,6 +84,7 @@ export default {
                 jobDesc:'',
                 executorHandler:'',
             },
+            currentPage:1,
             executors:[],
             jobDescriptions:[],
             jobHandlers:[],
@@ -142,6 +143,7 @@ export default {
     methods:{
         onSearch(){
             var that=this;
+            that.searchModel.start=(that.currentPage-1)*15;
             this.$axios.post('/jobinfo/pageList',that.searchModel).then((res)=>{
                 that.tbModel.data=res.data;
                 that.tbModel.total=res.recordsTotal;
@@ -163,7 +165,7 @@ export default {
             };
         },
         handleCurrentChange(val){
-            onSearch();
+            this.onSearch();
         },
         openAddDialog(title){
             this.dialog.title=title;

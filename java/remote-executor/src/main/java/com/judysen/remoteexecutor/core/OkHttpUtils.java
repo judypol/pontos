@@ -3,6 +3,7 @@ package com.judysen.remoteexecutor.core;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class OkHttpUtils {
     private static OkHttpUtils okHttpUtils=new OkHttpUtils();
@@ -14,7 +15,11 @@ public class OkHttpUtils {
     }
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
-    private final OkHttpClient client=new OkHttpClient();
+    private final OkHttpClient client=new OkHttpClient().newBuilder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(60,TimeUnit.SECONDS)
+            .writeTimeout(20,TimeUnit.SECONDS)
+            .build();
     /**
      *
      * @param param
