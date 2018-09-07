@@ -25,7 +25,7 @@ public class RemoteServiceInvoke {
                 resModel.getCode().equals("MSG00000")||resModel.getCode().equals("INFO0000")){
             return SUCCESS;
         }else{
-            return FAIL;
+            return new ReturnT(ReturnT.FAIL_CODE,ret);
         }
     }
 }

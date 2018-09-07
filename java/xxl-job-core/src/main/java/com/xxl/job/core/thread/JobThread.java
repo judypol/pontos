@@ -31,6 +31,7 @@ public class JobThread extends Thread{
 	private IJobHandler handler;
 	private LinkedBlockingQueue<TriggerParam> triggerQueue;
 	private Set<Integer> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
+	private static ExecutorService executorService=Executors.newCachedThreadPool();
 
 	private volatile boolean toStop = false;
 	private String stopReason;
@@ -123,33 +124,24 @@ public class JobThread extends Thread{
 					// execute
 					XxlJobLogger.log("<br>----------- pontos-job job execute start -----------<br>----------- Param:" + triggerParam.getExecutorParams());
 
-					if (triggerParam.getExecutorTimeout() > 0) {
-						// limit timeout
-						Thread futureThread = null;
-						try {
-							final TriggerParam triggerParamTmp = triggerParam;
-							FutureTask<ReturnT<String>> futureTask = new FutureTask<ReturnT<String>>(new Callable<ReturnT<String>>() {
-								@Override
-								public ReturnT<String> call() throws Exception {
-									return handler.execute(triggerParamTmp.getExecutorParams());
-								}
-							});
-							futureThread = new Thread(futureTask);
-							futureThread.start();
+					try {
+						final TriggerParam triggerParamTmp = triggerParam;
+						FutureTask<ReturnT<String>> futureTask = new FutureTask<ReturnT<String>>(new Callable<ReturnT<String>>() {
+							@Override
+							public ReturnT<String> call() throws Exception {
+								return handler.execute(triggerParamTmp.getExecutorParams());
+							}
+						});
+						executorService.execute(futureTask);
+						executeResult = futureTask.get(90, TimeUnit.SECONDS);	//60秒
+					} catch (TimeoutException e) {
 
-							executeResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
-						} catch (TimeoutException e) {
+						XxlJobLogger.log("<br>----------- pontos-job job execute timeout");
+						XxlJobLogger.log(e);
 
-							XxlJobLogger.log("<br>----------- pontos-job job execute timeout");
-							XxlJobLogger.log(e);
-
-							executeResult = new ReturnT<String>(IJobHandler.FAIL_TIMEOUT.getCode(), "job execute timeout ");
-						} finally {
-							futureThread.interrupt();
-						}
-					} else {
-						// just execute
-						executeResult = handler.execute(triggerParam.getExecutorParams());
+						executeResult = new ReturnT<String>(IJobHandler.FAIL_TIMEOUT.getCode(), "job execute timeout ");
+					} finally {
+						//futureThread.interrupt();
 					}
 
 					if (executeResult == null) {

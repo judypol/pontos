@@ -64,7 +64,7 @@ public class JobFailMonitorHelper {
 									logger.info(">>>>>>>>>>> job monitor, job success, JobLogId:{}", jobLogId);
 								} else /*if (IJobHandler.FAIL.getCode() == log.getTriggerCode()
 										|| IJobHandler.FAIL.getCode() == log.getHandleCode()
-										|| IJobHandler.FAIL_RETRY.getCode() == log.getHandleCode() )*/ {
+										|| IJobHandler.FAIL_RETRY.getCode() == log.getHandleCode())*/ {
 									// job fail,
 									failAlarm(log);
 									logger.info(">>>>>>>>>>> job monitor, job fail, JobLogId:{}", jobLogId);
@@ -121,15 +121,15 @@ public class JobFailMonitorHelper {
 	// ---------------------- alarm ----------------------
 
 	// email alarm template
-	private static final String mailBodyTemplate = "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</h5>" +
+	private static final String mailBodyTemplate = "<h5>" + "监控告警明细" + "：</h5>" +
 			"<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +
 			"   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
 			"      <tr>\n" +
-			"         <td width=\"20%\" >"+ I18nUtil.getString("jobinfo_field_jobgroup") +"</td>\n" +
-			"         <td width=\"10%\" >"+ I18nUtil.getString("jobinfo_field_id") +"</td>\n" +
-			"         <td width=\"20%\" >"+ I18nUtil.getString("jobinfo_field_jobdesc") +"</td>\n" +
-			"         <td width=\"10%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_title") +"</td>\n" +
-			"         <td width=\"40%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_content") +"</td>\n" +
+			"         <td width=\"20%\" >"+ "执行器" +"</td>\n" +
+			"         <td width=\"10%\" >"+ "任务ID" +"</td>\n" +
+			"         <td width=\"20%\" >"+ "任务名称" +"</td>\n" +
+			"         <td width=\"10%\" >"+ "告警类型" +"</td>\n" +
+			"         <td width=\"40%\" >"+ "告警内容" +"</td>\n" +
 			"      </tr>\n" +
 			"   </thead>\n" +
 			"   <tbody>\n" +
@@ -137,7 +137,7 @@ public class JobFailMonitorHelper {
 			"         <td>{0}</td>\n" +
 			"         <td>{1}</td>\n" +
 			"         <td>{2}</td>\n" +
-			"         <td>"+ I18nUtil.getString("jobconf_monitor_alarm_type") +"</td>\n" +
+			"         <td>{4}</td>\n" +
 			"         <td>{3}</td>\n" +
 			"      </tr>\n" +
 			"   </tbody>\n" +
@@ -161,6 +161,10 @@ public class JobFailMonitorHelper {
 			if (jobLog.getHandleCode()>0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
 				alarmContent += "<br>HandleCode=" + jobLog.getHandleMsg();
 			}
+			String alarmType="调度失败";
+			if(jobLog.getHandleCode()!=200){
+				alarmType="执行失败";
+			}
 
 			Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
 			for (String email: emailSet) {
@@ -171,7 +175,8 @@ public class JobFailMonitorHelper {
 						group!=null?group.getTitle():"null",
 						info.getId(),
 						info.getJobDesc(),
-						alarmContent);
+						alarmContent,
+						alarmType);
 
 				MailUtil.sendMail(email, title, content);
 			}
