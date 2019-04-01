@@ -132,7 +132,7 @@ public class XxlJobServiceImpl implements XxlJobService {
         String qz_group = String.valueOf(jobInfo.getJobGroup());
         String qz_name = String.valueOf(jobInfo.getId());
         try {
-            XxlJobDynamicScheduler.addJob(qz_name, qz_group, jobInfo.getJobCron(),jobInfo.getHoliday());
+            XxlJobDynamicScheduler.addJob(qz_name, qz_group, jobInfo.getJobCron(),jobInfo.getHoliday().toString());
             //XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
             return ReturnT.SUCCESS;
         } catch (SchedulerException e) {
@@ -218,7 +218,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		String qz_name = String.valueOf(exists_jobInfo.getId());
         try {
             boolean ret = XxlJobDynamicScheduler.rescheduleJob(qz_group, qz_name,
-					exists_jobInfo.getJobCron(),exists_jobInfo.getHoliday());
+					exists_jobInfo.getJobCron(),exists_jobInfo.getHoliday().toString());
             return ret?ReturnT.SUCCESS:ReturnT.FAIL;
         } catch (SchedulerException e) {
             logger.error(e.getMessage(), e);

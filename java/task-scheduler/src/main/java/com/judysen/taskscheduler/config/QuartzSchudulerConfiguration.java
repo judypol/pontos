@@ -28,7 +28,7 @@ public class QuartzSchudulerConfiguration {
     @Autowired
     DataSource dataSource;
 
-    @Value("${chineseCalendarHost}")
+    @Value("${chineseCalendarHost:}")
     private String chineseCalendarHost;
 
     @Bean
@@ -73,6 +73,10 @@ public class QuartzSchudulerConfiguration {
      * @throws IOException
      */
     private List<String> getAllHolidays() throws IOException{
+        if(StringUtils.isEmpty(this.chineseCalendarHost)){
+            return new ArrayList<>();
+        }
+
         Calendar calendar=Calendar.getInstance();
         String url=chineseCalendarHost+"/year?year="+calendar.get(Calendar.YEAR);
         String res=OkHttpUtils.init().get(url);

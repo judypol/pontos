@@ -38,7 +38,7 @@ public class XxlJobInfo {
 	// copy from quartz
 	private String jobStatus;		// 任务状态 【base on quartz】
 
-	private String holiday;			//是否排除节假日，on,--选择
+	private Boolean holiday;			//是否排除节假日，on,--选择
 
 
 	public int getId() {
@@ -201,11 +201,11 @@ public class XxlJobInfo {
 		this.jobStatus = jobStatus;
 	}
 
-	public String getHoliday() {
+	public Boolean getHoliday() {
 		return holiday;
 	}
 
-	public void setHoliday(String holiday) {
+	public void setHoliday(Boolean holiday) {
 		this.holiday = holiday;
 	}
 }

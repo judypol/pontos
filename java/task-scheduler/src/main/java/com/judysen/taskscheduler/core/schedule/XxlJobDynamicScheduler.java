@@ -155,10 +155,6 @@ public class XxlJobDynamicScheduler implements ApplicationContextAware {
 				jobInfo.setJobCron(cronExpression);
 			}
 
-			//JobKey jobKey = new JobKey(jobInfo.getJobName(), String.valueOf(jobInfo.getJobGroup()));
-            //JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-            //String jobClass = jobDetail.getJobClass().getName();
-
 			if (triggerState!=null) {
 				jobInfo.setJobStatus(triggerState.name());
 			}
@@ -204,7 +200,7 @@ public class XxlJobDynamicScheduler implements ApplicationContextAware {
         // CronTrigger : TriggerKey + cronExpression	// withMisfireHandlingInstructionDoNothing 忽略掉调度终止过程中忽略的调度
         CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
         CronTrigger cronTrigger;
-        if("on".equals(holiday)){
+        if("true".equals(holiday)){
             cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey)
                     .withSchedule(cronScheduleBuilder).modifiedByCalendar("chineseHoliday").build();
         }else{
@@ -216,12 +212,7 @@ public class XxlJobDynamicScheduler implements ApplicationContextAware {
 		Class<? extends Job> jobClass_ = RemoteHttpJobBean.class;   // Class.forName(jobInfo.getJobClass());
         
 		JobDetail jobDetail = JobBuilder.newJob(jobClass_).withIdentity(jobKey).build();
-        /*if (jobInfo.getJobData()!=null) {
-        	JobDataMap jobDataMap = jobDetail.getJobDataMap();
-        	jobDataMap.putAll(JacksonUtil.readValue(jobInfo.getJobData(), Map.class));	
-        	// JobExecutionContext context.getMergedJobDataMap().get("mailGuid");
-		}*/
-        
+
         // schedule : jobDetail + cronTrigger
         Date date = scheduler.scheduleJob(jobDetail, cronTrigger);
 
@@ -253,14 +244,14 @@ public class XxlJobDynamicScheduler implements ApplicationContextAware {
 
         if (oldTrigger != null) {
             // avoid repeat
-            String oldCron = oldTrigger.getCronExpression();
-            if (oldCron.equals(cronExpression)){
-                return true;
-            }
+//            String oldCron = oldTrigger.getCronExpression();
+//            if (oldCron.equals(cronExpression)){
+//                return true;
+//            }
 
             // CronTrigger : TriggerKey + cronExpression
             CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
-            if("on".equals(holiday)){
+            if("true".equals(holiday)){
                 oldTrigger = oldTrigger.getTriggerBuilder().withIdentity(triggerKey)
                         .withSchedule(cronScheduleBuilder).modifiedByCalendar("chineseHoliday").build();
             }else{

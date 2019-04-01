@@ -57,7 +57,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="节假日：" label-width="120px">
-                            <el-checkbox v-model="dialogModel.history"></el-checkbox>
+                            <el-checkbox v-model="dialogModel.holiday"></el-checkbox>
                         </el-form-item>
                     </el-col>
                 </el-form-item>

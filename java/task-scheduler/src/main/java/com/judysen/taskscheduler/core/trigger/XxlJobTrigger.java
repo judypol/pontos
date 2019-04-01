@@ -190,7 +190,6 @@ public class XxlJobTrigger {
             JobFailMonitorHelper.monitor(jobLog.getId());
             logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
         }
-
     }
 
     /**
@@ -218,5 +217,4 @@ public class XxlJobTrigger {
         runResult.setContent(address);
         return runResult;
     }
-
 }

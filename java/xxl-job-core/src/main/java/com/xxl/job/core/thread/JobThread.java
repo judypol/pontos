@@ -133,7 +133,12 @@ public class JobThread extends Thread{
 							}
 						});
 						executorService.execute(futureTask);
-						executeResult = futureTask.get(90, TimeUnit.SECONDS);	//60秒
+						int timeout=triggerParam.getExecutorTimeout();
+						if(timeout==0){
+							executeResult=futureTask.get();
+						}else{
+							executeResult = futureTask.get(600, TimeUnit.SECONDS);	//60秒
+						}
 					} catch (TimeoutException e) {
 
 						XxlJobLogger.log("<br>----------- pontos-job job execute timeout");
