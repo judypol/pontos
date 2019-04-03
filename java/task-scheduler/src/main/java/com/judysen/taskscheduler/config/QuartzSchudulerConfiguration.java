@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.channels.ShutdownChannelGroupException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Configuration
 public class QuartzSchudulerConfiguration {
@@ -46,16 +47,21 @@ public class QuartzSchudulerConfiguration {
     public Scheduler scheduler() throws Exception {
         Scheduler scheduler=schedulerFactoryBean().getScheduler();
         AnnualCalendar chineseHoliday =(AnnualCalendar) scheduler.getCalendar("chineseHoliday");
+        chineseHoliday.getDaysExcluded().clear();
         boolean flag=false;
-        if(chineseHoliday!=null){
-            Calendar currCalendar=Calendar.getInstance();
-            flag=chineseHoliday.getDaysExcluded().get(0).get(Calendar.YEAR)==currCalendar.get(Calendar.YEAR);
-        }else{
+//        if(chineseHoliday!=null){
+//            Calendar currCalendar=Calendar.getInstance();
+//            flag=chineseHoliday.getDaysExcluded().get(0).get(Calendar.YEAR)==currCalendar.get(Calendar.YEAR);
+//        }else{
+//            chineseHoliday=new AnnualCalendar();
+//        }
+        if(chineseHoliday==null){
             chineseHoliday=new AnnualCalendar();
         }
 
         if(!flag){
-            List<String> holidaysList=getAllHolidays();
+            Calendar currCalendar=Calendar.getInstance();
+            List<String> holidaysList=getAllHolidays().stream().filter(f->f.startsWith(String.valueOf(currCalendar.get(Calendar.YEAR)))).collect(Collectors.toList());
             for(String d :holidaysList){
                 Calendar calendar=Calendar.getInstance();
                 calendar.setTime(DateUtils.parseDate(d,"yyyy-MM-dd","yyyyMMdd"));

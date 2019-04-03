@@ -69,4 +69,4 @@ logging:
   config: classpath:logback/logback-dev.xml
   path: /data/logs/job
 
-# chineseCalendarHost: http://192.168.60.132:7080/calendar
+chineseCalendarHost: http://192.168.18.50:7080/calendar

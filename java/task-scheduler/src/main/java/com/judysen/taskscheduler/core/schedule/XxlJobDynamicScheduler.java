@@ -205,7 +205,7 @@ public class XxlJobDynamicScheduler implements ApplicationContextAware {
                     .withSchedule(cronScheduleBuilder).modifiedByCalendar("chineseHoliday").build();
         }else{
             cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey)
-                    .withSchedule(cronScheduleBuilder).build();
+                    .withSchedule(cronScheduleBuilder).modifiedByCalendar(null).build();
         }
 
         // JobDetail : jobClass
@@ -256,7 +256,7 @@ public class XxlJobDynamicScheduler implements ApplicationContextAware {
                         .withSchedule(cronScheduleBuilder).modifiedByCalendar("chineseHoliday").build();
             }else{
                 oldTrigger = oldTrigger.getTriggerBuilder().withIdentity(triggerKey)
-                        .withSchedule(cronScheduleBuilder).build();
+                        .withSchedule(cronScheduleBuilder).modifiedByCalendar(null).build();
             }
 
             // rescheduleJob
