@@ -270,15 +270,12 @@ public class XxlJobDynamicScheduler implements ApplicationContextAware {
                         .withSchedule(cronScheduleBuilder).modifiedByCalendar("chineseHoliday").build();
             }else{
                 cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey)
-                        .withSchedule(cronScheduleBuilder).build();
+                        .withSchedule(cronScheduleBuilder).modifiedByCalendar(null).build();
             }
 
             // JobDetail-JobDataMap fresh
             JobKey jobKey = new JobKey(jobName, jobGroup);
             JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-            /*JobDataMap jobDataMap = jobDetail.getJobDataMap();
-            jobDataMap.clear();
-            jobDataMap.putAll(JacksonUtil.readValue(jobInfo.getJobData(), Map.class));*/
 
             // Trigger fresh
             HashSet<Trigger> triggerSet = new HashSet<Trigger>();

@@ -74,6 +74,9 @@ public class JobInfoController {
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
+		if(jobInfo.getHoliday()==null){
+			jobInfo.setHoliday(false);
+		}
 		return xxlJobService.add(jobInfo);
 	}
 	

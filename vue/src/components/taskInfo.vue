@@ -141,7 +141,7 @@ export default {
                 // executorTimeout:60,
                 // glueType:'',
                 // childJobId:'',
-                // holiday:'',
+                holiday:false,
                 // visible:false,
             },
         }
