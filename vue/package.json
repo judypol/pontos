@@ -12,7 +12,7 @@
     "uat": "webpack --config build/webpack.uat.conf.js --progress"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "babel-polyfill": "^6.26.0",
     "element-ui": "^2.4.4",
     "moment": "^2.22.2",
